@@ -3,7 +3,7 @@ const router = express.Router();
 const path = require('path');
 
 const registerController = require('../controllers/registerController');
-const staticFilesPath = "/Users/ashwingnanasekar/Downloads/project_repos/Financial_Market_Analysis/frontend/src/components/register/register.html"
+const staticFilesPath = "/Users/ashwingnanasekar/Downloads/project_repos/Financial_Market_Analysis/src/frontend/src/components/register/register.html"
 router.use(express.static(staticFilesPath));
 
 // Built-in middleware to handle url encoded form data

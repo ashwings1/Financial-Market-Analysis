@@ -3,11 +3,11 @@ const router = express.Router();
 const path = require("path");
 
 //const loginController = require('../controllers/loginController');
-const staticFilesPath = "/Users/ashwingnanasekar/Downloads/project_repos/Financial_Market_Analysis/frontend/src/components/home/home.html"
+const staticFilesPath = "/Users/ashwingnanasekar/Downloads/project_repos/Financial_Market_Analysis/src/frontend/src/components/dashboard/dashboard.html"
 router.use(express.static(staticFilesPath));
 
 // Define route handler for the root URL ('/')
-router.get('/login', (req, res) => {
+router.get('/dashboard', (req, res) => {
     res.sendFile(path.join(staticFilesPath));
 });
 
@@ -21,7 +21,6 @@ router.get('*.(jpg|png|gif|jpeg|svg)', (req, res) => {
     res.sendFile(req.url);
 });
 
-//console.log("User logged out successfully:");
 //router.post('/', loginController.handleLogin);
 
 module.exports = router;
