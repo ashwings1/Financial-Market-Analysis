@@ -1,0 +1,17 @@
+Financial_Market_Analysis/backend/src/config/*
+Financial_Market_Analysis/backend/src/controllers/*
+Financial_Market_Analysis/backend/src/models/*
+Financial_Market_Analysis/backend/src/node_modules
+Financial_Market_Analysis/backend/src/routes/*
+Financial_Market_Analysis/backend/src/.env
+Financial_Market_Analysis/backend/src/package-lock.json
+Financial_Market_Analysis/backend/src/package.json
+Financial_Market_Analysis/backend/src/server.js
+Financial_Market_Analysis/frontend/public/images/*
+Financial_Market_Analysis/frontend/public/styles/*
+Financial_Market_Analysis/frontend/src/*
+Financial_Market_Analysis/backend/src/node_modules
+Financial_Market_Analysis/backend/src/.env
+
+
+

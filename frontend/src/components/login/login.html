@@ -1,0 +1,75 @@
+<html lang="en">
+  <head>
+    <!-- Character encoding and viewport settings -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Title of the page -->
+    <title>Login</title>
+    <!-- External stylesheet for login styles -->
+    <link rel="stylesheet" type="text/css" href="/Users/ashwingnanasekar/Downloads/project_repos/Financial_Market_Analysis/frontend/public/styles/login.css" />
+    <!-- Preconnect links for Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Google Fonts link for Inter font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome CSS version 5.15.4 -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Top left text -->
+    <a href="/" class="text-top-left">Infinity</a>
+    <!-- Top right text -->
+    <div class="text-top-right">Don't have an account?</div>
+    <!-- Link for signing up -->
+    <a href="register" class="link-top-right">Sign up</a>
+    <!-- Horizontal line separator -->
+    <span class="horizontal-line"></span> </span>
+    <!-- Form container -->
+    <div class="form-container" id="container">
+      <form action="/login" method="POST">
+        <!-- Heading for login form -->
+        <h1>Log in to your account</h1>
+        <br />
+        <!-- Username input field -->
+        <div class="input-container">
+          <span class="icon person-icon">
+            <!-- User icon image -->
+            <img
+              src="/Users/ashwingnanasekar/Downloads/project_repos/Financial_Market_Analysis/frontend/public/images/user-solid.svg"
+              alt="User Icon"
+              width="20"
+              height="20"
+            />
+          </span>
+          <input type="text" name="username" placeholder="Username" /><br />
+        </div>
+        <!-- Password input field -->
+        <div class="input-container">
+          <span class="icon lock-icon">
+            <!-- Lock icon image -->
+            <img
+              src="/Users/ashwingnanasekar/Downloads/project_repos/Financial_Market_Analysis/frontend/public/images/lock-solid.svg"
+              alt="Lock Icon"
+              width="20"
+              height="20"
+            />
+          </span>
+          <input type="password" name="password" placeholder="Password" />
+        </div>
+        <br />
+        <!-- Link for password recovery -->
+        <a href="#">Forgot your password?</a><br /><br />
+        <!-- Login button -->
+        <button type="submit">Log In</button>
+      </form>
+    </div>
+    <!-- JavaScript file for additional functionality -->
+    <script src="main.js"></script>
+  </body>
+</html>

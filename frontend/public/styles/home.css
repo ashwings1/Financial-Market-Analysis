@@ -1,0 +1,75 @@
+/* Apply box-sizing border-box to all elements */
+* {
+  box-sizing: border-box;
+}
+
+/* Apply background gradient and flex layout to the body */
+body {
+  background-image: linear-gradient(to bottom, #a83b3b, #191414);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Inter", sans-serif;
+  height: 100vh;
+  margin: -20px 0 50px;
+}
+
+/* Style for top-left text */
+.text-top-left {
+  position: absolute;
+  top: 30px;
+  left: 300px;
+  color: black;
+  font-size: 40px;
+  font-family: "Inter", sans-serif;
+  text-decoration: none;
+}
+
+/* Style for top-right link */
+.link-login {
+  position: absolute;
+  top: 55px;
+  right: 240px;
+  color: black;
+  font-size: 20px;
+  font-family: "Inter", sans-serif;
+  text-decoration: none;
+}
+
+/* Style for top-right text */
+.text-top-right {
+  position: absolute;
+  top: 55px;
+  right: 227px;
+  color: black;
+  font-size: 20px;
+  font-family: "Inter", sans-serif;
+}
+
+/* Style for top-right link */
+.link-signup {
+  position: absolute;
+  top: 55px;
+  right: 150px;
+  color: black;
+  font-size: 20px;
+  font-family: "Inter", sans-serif;
+  text-decoration: none;
+}
+
+/* Style for horizontal line */
+.horizontal-line {
+  position: absolute;
+  top: 90px;
+  width: 100%;
+  border-top: 1px solid black;
+}
+
+/* Style for heading elements */
+h1 {
+  text-align: center;
+  font-weight: normal;
+  margin: 0;
+  font-family: "Inter", sans-serif;
+}
