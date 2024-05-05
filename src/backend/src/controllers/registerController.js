@@ -29,7 +29,8 @@ const handleNewUser = async (req, res) => {
 
         console.log("User created successfully:", result);
 
-        res.status(201).json({ 'success': `New user ${username} created!` });
+        //res.status(201).json({ 'success': `New user ${username} created!` });
+        res.redirect('/dashboard');
     } catch (error) {
         console.error("Error occurred during user creation:", error);
         res.status(500).json({ 'message': error.message })
