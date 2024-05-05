@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: false }));
 // Built-in middleware for json
 app.use(express.json());
 
-//Routes
+// Routes
 app.use("/", require("./routes/home"));
 app.use("/register", require("./routes/register"));
 app.use("/login", require("./routes/login"));

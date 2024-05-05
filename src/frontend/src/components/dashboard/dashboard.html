@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Title of the page -->
     <title>Infinity</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- External stylesheet for login styles -->
     <link rel="stylesheet" type="text/css" href="/Users/ashwingnanasekar/Downloads/project_repos/Financial_Market_Analysis/src/frontend/public/styles/dashboard.css" />
     <!-- Preconnect links for Google Fonts -->
@@ -30,6 +31,34 @@
     <span class="horizontal-line"></span> </span>
         <!-- Heading for login form -->
         <h1>Welcome to the Dashboard.</h1>
+        <canvas id="myChart" width="400" height="400"></canvas>
+
+        <script>
+          async function fetchData() {
+            const response = await fetch('/predictions');
+            const data = await response.json();
+            const chartData = convertToChartData(data);
+            renderChart(chartData);
+          }
+      
+          function renderChart(data) {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: data.labels,
+                datasets: [{
+                  label: 'Stock Predictions',
+                  data: data.values,
+                  borderColor: 'rgb(75, 192, 192)',
+                  tension: 0.1
+                }]
+              }
+            });
+          }
+      
+          fetchData();
+        </script>
     <!-- JavaScript file for additional functionality -->
     <script src="main.js"></script>
   </body>
