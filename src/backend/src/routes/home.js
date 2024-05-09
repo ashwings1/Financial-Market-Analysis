@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const staticFilesPath = "/Users/ashwingnanasekar/Downloads/project_repos/Financial_Market_Analysis/src/frontend/src/components/home/home.html"
+//const staticFilesPath = "src/frontend/src/components/home/home.html"
 router.use(express.static(staticFilesPath));
 
 // Define route handler for the root URL ('/')
 router.get('/', (req, res) => {
-    res.sendFile(path.join(staticFilesPath));
+    res.sendFile(staticFilesPath);
 });
 
 // Middleware to serve CSS files with correct MIME type
