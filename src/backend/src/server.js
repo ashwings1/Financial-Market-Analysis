@@ -16,16 +16,8 @@ const PORT = process.env.PORT || 3500;
 const DB_URI = process.env.DATABASE_URI;
 const ALPHA_VANTAGE_KEY = process.env.ALPHA_VANTAGE_KEY;
 
-/*
 // Azure AutoML config
-const SUBSCRIPTION_ID = process.env.AZURE_SUBSCRIPTION_ID;
-const RESOURCE_GROUP = process.env.AZURE_RESOURCE_GROUP;
-const WORKSPACE_NAME = process.env.AZURE_WORKSPACE_NAME;
-const MODEL_NAME = procces.env.AZURE_MODEL_NAME;
-const AZURE_CLIENT_ID = process.env.AZURE_CLIENT_ID;
-const AZURE_TENANT_ID = process.env.AZURE_TENANT_ID;
-const AZURE_CLIENT_SECRET = process.env.AZURE_CLIENT_SECRET;
-*/
+const AZURE_AUTOML_KEY = process.env.AZURE_AUTOML_API_KEY;
 
 // Connect to MongoDB
 connectDB();
@@ -96,9 +88,39 @@ app.post('/stock', async (req, res) => {
             dayVolume: data.chart.result[0].meta.regularMarketVolume.toLocaleString(),
         };
 
+
         io.emit('stockData', stockInfo);
-        res.json(stockInfo);
-        //console.log('Sending stock data to frontend');
+
+        // Call Azure AutoML scoring endpoint
+        const requestBody = {
+            "input_data": {
+                "data": [
+                    {
+                        "Date": stockInfo.currentDate,
+                        "Open": parseFloat(stockInfo.todayOpen),
+                        "High": parseFloat(stockInfo.dayHigh),
+                        "Low": parseFloat(stockInfo.dayLow),
+                        "Adj Close": parseFloat(stockInfo.adjustedPreviousClose),
+                        "Volume": parseInt(stockInfo.dayVolume.replace(/,/g, ''), 10)
+                    }
+                ]
+            }
+        };
+
+        const requestHeaders = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + AZURE_AUTOML_KEY,
+            "azureml-model-deployment": "processdatastock"
+        };
+
+        const url = "https://stockprediction-ash.eastus.inference.ml.azure.com/score";
+
+        const autoMLResponse = await axios.post(url, requestBody, { headers: requestHeaders });
+
+        console.log("Azure AutoML response:", autoMLResponse.data);
+
+        res.json({ stockInfo, autoMLResponse: autoMLResponse.data });
+
     } catch (error) {
         console.error('Error fetching stock data:', error);
         res.status(500).json({ error: 'Failed to fetch stock data' });
@@ -159,42 +181,6 @@ app.post('/news', async (req, res) => {
     }
 });
 
-app.post('/forecast', async (req, res) => {
-    try {
-        const symbol = req.query.stockSymbol;
-        const forecastHorizion = req.query.forecastHorizon || 7;
-
-        // Fetch stock data for given symbol
-        const response = await axios.post('http://localhost:3500/stock', { stockSymbol: symbol });
-        const stockInfo = response.data;
-
-        // Prepare data for forecasting with retrieved stock info
-        const timeSeriesData = prepareTimeSeriesData(stockInfo);
-
-        // Call Azure AutoML to get forecast
-    } catch (error) {
-        console.error('Error fetching forecast data:', error);
-        res.status(500).json({ error: 'Failed to fetch forecast data' });
-    }
-});
-
-function prepareTimeSeriesData(stockInfo) {
-    const { currentDate, currentPrice, todayOpen, adjustedPreviousClose, dayHigh, dayLow, dayVolume } = stockInfo;
-
-    const input_data = {
-        data: [{
-            Date: currentDate,
-            Open: todayOpen,
-            High: dayHigh,
-            Low: dayLow,
-            "Adj Close": adjustedPreviousClose,
-            Volume: dayVolume
-        }]
-    };
-
-    return { input_data, GlobalParameters: 0.0 };
-}
-
 
 io.on('connection', (socket) => {
     console.log('Client connected');
@@ -209,3 +195,98 @@ mongoose.connection.once('open', () => {
     console.log('Connected to MongoDB');
     server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 })
+
+/*
+// Prepare the data in the format expected by the scoring endpoint
+const requestBody = {
+    "input_data": {
+        "columns": ["Date", "Open", "High", "Low", "Adj Close", "Volume"],
+        "index": [],
+        "data": [
+            [
+                stockInfo.currentDate,
+                parseFloat(stockInfo.todayOpen),
+                parseFloat(stockInfo.dayHigh),
+                parseFloat(stockInfo.dayLow),
+                parseFloat(stockInfo.adjustedPreviousClose),
+                parseFloat(stockInfo.dayVolume)
+            ]
+        ]
+    }
+};
+
+// Make a POST request to the scoring endpoint
+const scoringUrl = 'https://stockprediction-ash.eastus.inference.ml.azure.com/score';
+const apiKey = AZURE_AUTOML_API_KEY;
+
+const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${apiKey}`
+};
+
+axios.post(url, requestBody, { headers })
+    .then(response => {
+        console.log('Scoring response:', response.data);
+    })
+    .catch(error => {
+        console.error('Error:', error.message);
+    });
+    */
+
+/*
+app.post('/forecast', async (req, res) => {
+    try {
+        const symbol = req.query.stockSymbol;
+        const forecastHorizion = req.query.forecastHorizon || 7;
+
+        // Fetch stock data for given symbol
+        const responseData = await axios.post('http://localhost:3500/stock', { stockSymbol: symbol });
+        const stockInfo = responseData.data;
+
+        // Prepare data for forecasting with retrieved stock info
+        const requestBody = {
+            "input_data": {
+                "columns": ["Date", "Open", "High", "Low", "Adj Close", "Volume"],
+                "index": [],
+                "data": [
+                    [
+                        stockInfo.currentDate,
+                        parseFloat(stockInfo.todayOpen),
+                        parseFloat(stockInfo.dayHigh),
+                        parseFloat(stockInfo.dayLow),
+                        parseFloat(stockInfo.adjustedPreviousClose),
+                        parseFloat(stockInfo.dayVolume)
+                    ]
+                ]
+            }
+        };
+
+        const requestHeaders = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer" + process.env.AZURE_AUTOML_API_KEY,
+            "azureml-model-deployment": "proccessdatastock"
+        }
+
+        const url = "https://stockprediction-ash.eastus.inference.ml.azure.com/score";
+
+        const response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(requestBody),
+            headers: requestHeaders
+        });
+
+        if (response.ok) {
+            const forecastedData = await response.json();
+            // Send forecasted data to frontend
+            res.json(forecastedData);
+        } else {
+            console.debug(await response.text());
+            throw new Error("Request failed with status code" + response.status);
+        }
+
+    } catch (error) {
+        console.error('Error fetching forecast data:', error);
+        res.status(500).json({ error: 'Failed to fetch forecast data' });
+    }
+});
+*/

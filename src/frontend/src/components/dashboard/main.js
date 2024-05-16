@@ -3,8 +3,8 @@ console.log("before eventListener");
 document.addEventListener('DOMContentLoaded', () => {
     const searchForm = document.getElementById('searchForm');
     const stockInfoContainer = document.getElementById('stockInfo');
+    const forecastInfoContainer = document.getElementById('forecastInfo');
     const newsInfoContainer = document.getElementById('newsInfo');
-    //console.log("after eventListener");
 
     // Connect to Socket.IO server
     const socket = io({
@@ -42,8 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Failed to fetch stock data from backend');
             }
 
-            const data = await response.json();
-            displayStockInfo(data);
+            //const data = await response.json();
+            //displayStockInfo(data);
+            const { stockInfo, autoMLResponse } = await response.json();
+            displayStockInfo(stockInfo);
+            displayForecastInfo(autoMLResponse);
         } catch (error) {
             console.error('Error fetching stock data:', error);
             stockInfoContainer.innerHTML = '<p>Error fetching stock data</p>';
@@ -121,6 +124,33 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>Low: $${stockData.dayLow}</p>
             <p>Volume: ${stockData.dayVolume}</p>
         `;
+    }
+
+    function displayForecastInfo(forecastData) {
+
+        // Check if forecastData is an array with at least one element
+        if (Array.isArray(forecastData) && forecastData.length > 0) {
+            // Access the first element of the array 
+            const forecastPrice = forecastData[0];
+
+            if (typeof forecastPrice === 'number') {
+                // Round the forecasted price to two decimal places
+                const roundedForecast = forecastPrice.toFixed(2);
+
+                // Display the rounded forecasted price
+                forecastInfoContainer.innerHTML = `
+                <h2>Forecasted Price: ${roundedForecast}</h2>
+            `;
+            } else {
+                // Handle the case where the forecasted price is not a number
+                console.error('Error: Forecasted price is not a number.');
+                forecastInfoContainer.innerHTML = '<h2>Forecasted Price: N/A</h2>'; // Or any other placeholder value or message
+            }
+        } else {
+            // Handle the case where forecastData is not in the expected format
+            console.error('Error: Invalid forecast data format.');
+            forecastInfoContainer.innerHTML = '<h2>Forecasted Price: N/A</h2>'; // Or any other placeholder value or message
+        }
     }
 
     function displayNews(newsData) {

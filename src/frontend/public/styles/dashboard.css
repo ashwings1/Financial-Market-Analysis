@@ -97,6 +97,18 @@ button[type="submit"] {
   cursor: pointer;
 }
 
+/* Style for forecast info container */
+#forecastInfo {
+  margin-top: 20px;
+  text-align: center;
+  color: #007bff;
+  background-color: #fff;
+  border: 1px solid #007bff;
+  padding: 10px;
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
 /* Style for stock info container */
 #stockInfo {
   margin-top: 20px;
@@ -138,7 +150,7 @@ button[type="submit"] {
   cursor: pointer;
 }
 
-/* Style for stock info container */
+/* Style for news info container */
 #newsInfo {
   margin-top: 20px;
   text-align: center;
