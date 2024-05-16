@@ -137,3 +137,30 @@ button[type="submit"] {
   border: none;
   cursor: pointer;
 }
+
+/* Style for stock info container */
+#newsInfo {
+  margin-top: 20px;
+  text-align: center;
+  color: #007bff;
+  background-color: #fff;
+  border: 1px solid #007bff;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.news-item {
+  border: 1px solid #ccc; /* Example border style */
+  margin-bottom: 20px; /* Example margin bottom */
+  padding: 10px; /* Example padding */
+  background-color: #f9f9f9; /* Example background color */
+}
+
+.news-item h3 {
+  margin-top: 0; /* Example margin top for heading */
+}
+
+.news-item p {
+  margin: 5px 0; /* Example margin for paragraphs */
+}

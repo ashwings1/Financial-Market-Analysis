@@ -17,11 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
         displayStockInfo(stockData);
     });
 
+
+    /*
     // Listen for newsData event from server
     socket.on('newsData', (newsData) => {
         console.log("Received news data: ", newsData);
         displayNews(newsData);
     });
+    */
 
     // Function to fetch stock data from the server
     const fetchStockData = async (symbol) => {
@@ -63,9 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const newsData = await newsResponse.json();
+            console.log("newsData in POST: ", newsData);
             displayNews(newsData);
         } catch (error) {
-            console.log('Error fetching news data:', symbol);
+            console.log('Error fetching news data:', error);
             newsInfoContainer.innerHTML = '<p>Error fetching news data</p>';
         }
     };
@@ -101,38 +105,74 @@ document.addEventListener('DOMContentLoaded', () => {
         await fetchStockData(symbol);
 
         // Fetch initial news data
+        //await fetchNewsData(symbol);
         await fetchNewsData(symbol);
     });
 
     function displayStockInfo(stockData) {
         stockInfoContainer.innerHTML = `
             <h2>${stockData.symbol} - ${stockData.currency}</h2>
+            <p>Current Date: ${stockData.currentDate}</p>
+            <p>Current Time: ${stockData.currentTime}</p>
             <p>Current Price: $${stockData.currentPrice}</p>
-            <p>Previous Close: $${stockData.previousClose}</p>
-            <p>Regular Day High: $${stockData.regularDayHigh}</p>
-            <p>Regular Day Low: $${stockData.regularDayLow}</p>
-            <p>Regular Day Volume: ${stockData.regularVolume}</p>
+            <p>Open: $${stockData.todayOpen}</p>
+            <p>Adjusted Close: $${stockData.adjustedPreviousClose}</p>
+            <p>High: $${stockData.dayHigh}</p>
+            <p>Low: $${stockData.dayLow}</p>
+            <p>Volume: ${stockData.dayVolume}</p>
         `;
     }
 
     function displayNews(newsData) {
-        if (newsData) {
-            // Clear previous news
-            newsInfoContainer.innerHTML = '';
+        console.log("Received news data:", newsData);
 
-            // Display news articles
-            newsData.forEach(article => {
-                const newsItem = document.createElement('div');
-                newsItem.classList.add('news-item');
-                newsItem.innerHTML = `
-                <h3>${article.title}</h3>
-                <p>${article.description}</p>
-            `;
-                newsInfoContainer.appendChild(newsItem);
-            });
-        } else {
-            console.error('News data is null or undefined');
-        }
+        const newsArticles = newsData.news;
 
+        const rankedArticles = newsArticles.sort((a, b) => {
+            if (a.overall_sentiment_label === 'Positive' && b.overall_sentiment_label !== 'Positive') {
+                return -1;
+            } else if (a.overall_sentiment_label !== 'Positive' && b.overall_sentiment_label === 'Positive') {
+                return 1;
+            } else {
+                // Sentiment same then rank based on latest time published
+                return new Date(b.time_published) - new Date(a.time_published);
+            }
+        });
+
+        // Display the top 3 articles
+        const topArticles = rankedArticles.slice(0, 1);
+
+        console.log("Ranked articles:", topArticles);
+
+
+        // Clear previous news
+        newsInfoContainer.innerHTML = '';
+
+
+        const fragment = document.createDocumentFragment();
+
+        // Display news articles
+        topArticles.forEach(article => {
+            const newsItem = document.createElement('div');
+            newsItem.classList.add('news-item');
+            newsItem.innerHTML = `
+            <h3>${article.title}</h3>
+            <p>Time Published: ${article.time_published}</p>
+            <p>Author: ${article.authors.join(', ')}</p>
+            <p>Summary: ${article.summary}</p>
+            <p>Source: ${article.source}</p>
+            <p>Overall Sentiment: ${article.overall_sentiment_label}</p>
+            <p>Ticker Sentiment: ${article.ticker_sentiment.map(sentiment => sentiment.ticker_sentiment_label).join(', ')}</p>
+            <a href="${article.url}" target="_blank">Read more</a>
+        `;
+            console.log("Updated newsItem:", newsItem);
+            fragment.appendChild(newsItem);
+        });
+        // Clear previous news
+        newsInfoContainer.innerHTML = '';
+
+        // Append all articles to the container
+        newsInfoContainer.appendChild(fragment);
     }
+
 });
