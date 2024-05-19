@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayStockInfo(stockInfo);
             displayForecastInfo(autoMLResponse);
         } catch (error) {
-            console.error('Error fetching stock data:', error);
+            console.error('Error fetching frontend stock data:', error);
             stockInfoContainer.innerHTML = '<p>Error fetching stock data</p>';
             return null;
         }

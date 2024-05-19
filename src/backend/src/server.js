@@ -115,14 +115,16 @@ app.post('/stock', async (req, res) => {
 
         const url = "https://stockprediction-ash.eastus.inference.ml.azure.com/score";
 
-        const autoMLResponse = await axios.post(url, requestBody, { headers: requestHeaders });
+        //const autoMLResponse = await axios.post(url, requestBody, { headers: requestHeaders });
 
-        console.log("Azure AutoML response:", autoMLResponse.data);
+        //console.log("Azure AutoML response:", autoMLResponse.data);
 
-        res.json({ stockInfo, autoMLResponse: autoMLResponse.data });
+        //res.json({ stockInfo, autoMLResponse: autoMLResponse.data });
+
+        res.json({ stockInfo });
 
     } catch (error) {
-        console.error('Error fetching stock data:', error);
+        console.error('Error fetching backend stock data:', error);
         res.status(500).json({ error: 'Failed to fetch stock data' });
     }
 });
@@ -196,97 +198,3 @@ mongoose.connection.once('open', () => {
     server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 })
 
-/*
-// Prepare the data in the format expected by the scoring endpoint
-const requestBody = {
-    "input_data": {
-        "columns": ["Date", "Open", "High", "Low", "Adj Close", "Volume"],
-        "index": [],
-        "data": [
-            [
-                stockInfo.currentDate,
-                parseFloat(stockInfo.todayOpen),
-                parseFloat(stockInfo.dayHigh),
-                parseFloat(stockInfo.dayLow),
-                parseFloat(stockInfo.adjustedPreviousClose),
-                parseFloat(stockInfo.dayVolume)
-            ]
-        ]
-    }
-};
-
-// Make a POST request to the scoring endpoint
-const scoringUrl = 'https://stockprediction-ash.eastus.inference.ml.azure.com/score';
-const apiKey = AZURE_AUTOML_API_KEY;
-
-const headers = {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${apiKey}`
-};
-
-axios.post(url, requestBody, { headers })
-    .then(response => {
-        console.log('Scoring response:', response.data);
-    })
-    .catch(error => {
-        console.error('Error:', error.message);
-    });
-    */
-
-/*
-app.post('/forecast', async (req, res) => {
-    try {
-        const symbol = req.query.stockSymbol;
-        const forecastHorizion = req.query.forecastHorizon || 7;
-
-        // Fetch stock data for given symbol
-        const responseData = await axios.post('http://localhost:3500/stock', { stockSymbol: symbol });
-        const stockInfo = responseData.data;
-
-        // Prepare data for forecasting with retrieved stock info
-        const requestBody = {
-            "input_data": {
-                "columns": ["Date", "Open", "High", "Low", "Adj Close", "Volume"],
-                "index": [],
-                "data": [
-                    [
-                        stockInfo.currentDate,
-                        parseFloat(stockInfo.todayOpen),
-                        parseFloat(stockInfo.dayHigh),
-                        parseFloat(stockInfo.dayLow),
-                        parseFloat(stockInfo.adjustedPreviousClose),
-                        parseFloat(stockInfo.dayVolume)
-                    ]
-                ]
-            }
-        };
-
-        const requestHeaders = {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer" + process.env.AZURE_AUTOML_API_KEY,
-            "azureml-model-deployment": "proccessdatastock"
-        }
-
-        const url = "https://stockprediction-ash.eastus.inference.ml.azure.com/score";
-
-        const response = await fetch(url, {
-            method: "POST",
-            body: JSON.stringify(requestBody),
-            headers: requestHeaders
-        });
-
-        if (response.ok) {
-            const forecastedData = await response.json();
-            // Send forecasted data to frontend
-            res.json(forecastedData);
-        } else {
-            console.debug(await response.text());
-            throw new Error("Request failed with status code" + response.status);
-        }
-
-    } catch (error) {
-        console.error('Error fetching forecast data:', error);
-        res.status(500).json({ error: 'Failed to fetch forecast data' });
-    }
-});
-*/
